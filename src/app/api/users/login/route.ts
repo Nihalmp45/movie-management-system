@@ -51,10 +51,7 @@ export async function POST(request: NextRequest) {
 
     return response;
 
-    //send verification email
-
-     await sendEmail({email, emailType: "VERIFY", userId: tokenData.id})
-
+   
 
 
   } catch (error: any) {

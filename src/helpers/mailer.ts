@@ -31,21 +31,29 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
       },
     });
 
+    let htmlContent = '';
+    let subject = '';
+
+    if (emailType === "VERIFY") {
+      subject = "Verify your email";
+      htmlContent = `<p>Click <a href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}">here</a> to verify your email address. <br> 
+      Or copy and paste the link below in your browser:<br> ${process.env.DOMAIN}/verifyemail?token=${hashedToken}</p>`;
+    } 
+
+    else if (emailType === "RESET") {
+      subject = "Reset your password";
+      htmlContent = `<p>Click <a href="${process.env.DOMAIN}/newPassword?token=${hashedToken}">here</a> to reset your password. <br> 
+      Or copy and paste the link below in your browser:<br> ${process.env.DOMAIN}/newPassword?token=${hashedToken}</p>`;
+    }
+
+
     const mailOptions = {
       from: "nihalmp45@gmail.com",
       to: email,
-      subject:
-        emailType === "VERIFY" ? "Verify your email" : "Reset your password",
-      html: `<p>Click <a href="${
-        process.env.DOMAIN
-      }/verifyemail?token=${hashedToken}">here</a> to ${
-        emailType === "VERIFY" ? "verify your email" : "reset your password"
-      }
-            or copy and paste the link below in your browser. <br> ${
-              process.env.DOMAIN
-            }/verifyemail?token=${hashedToken}
-            </p>`,
+      subject: subject,
+      html: htmlContent,
     };
+
     console.log("DOMAIN:", process.env.DOMAIN);
 
     transport.verify((error, success) => {

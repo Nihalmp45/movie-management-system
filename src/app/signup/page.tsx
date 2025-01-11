@@ -1,87 +1,173 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios  from "axios";
-import toast, { Toaster } from 'react-hot-toast';
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 
 export default function SignupPage() {
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-    username: "",
-  });
-  const [buttonDisabled,setButtonDisabled] = useState(false)
-  const [loading,setLoading] = useState(false)
-  const router = useRouter()
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const onSignup = async () => {
+  // Initialize React Hook Form
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onBlur", // Trigger validation on blur
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  // Signup handler
+  const onSignup = async (data: any) => {
     try {
       setLoading(true);
-      const response = await axios.post('/api/users/signup', user);
+      const response = await axios.post("/api/users/signup", data);
       console.log(response.data);
-      toast.success('Successfully created! 🎉'); // Success toast
+      toast.success("Successfully created! 🎉"); // Success toast
       setTimeout(() => {
-        router.push('/login');
+        router.push("/login");
       }, 2000);
     } catch (error) {
       console.error(error);
-      toast.error('User Already exist ❌'); // Error toast
+      toast.error("User Already exists ❌"); // Error toast
     } finally {
       setLoading(false);
     }
   };
 
-
-  useEffect(() => {
-    if (user.email.length >0 && user.password.length>0 && user.username.length>0){
-      setButtonDisabled(false)
-    }else(
-    setButtonDisabled(true))
-  }, [user])
-
-
-  
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1>{loading ? "Loading":"Signup"}</h1>
-      <Toaster position="top-center" reverseOrder={false} />
-      <hr />
-      <label htmlFor="username">username</label>
-      <input
-        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
-        type="text"
-        id="username"
-        name="username"
-        value={user.username}
-        onChange={(e) => setUser({ ...user, username: e.target.value })}
-        placeholder="username"
-      />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-indigo-600 py-6">
+      <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          {loading ? "Loading..." : "Create an Account"}
+        </h1>
+        <Toaster position="top-center" reverseOrder={false} />
+        <form onSubmit={handleSubmit(onSignup)}>
+          {/* Username */}
+          <div className="mb-4">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Username
+            </label>
+            <input
+              id="username"
+              className={`w-full p-3 border rounded-lg focus:outline-none ${
+                errors.username
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-indigo-500"
+              }`}
+              placeholder="Enter your username"
+              {...register("username", {
+                required: "Username is required",
+                maxLength: {
+                  value: 15,
+                  message: "Username cannot exceed 15 characters",
+                },
+              })}
+            />
+            {errors.username && (
+              <p className="text-red-500 text-sm">{errors.username.message}</p>
+            )}
+          </div>
 
-      <label htmlFor="email">email</label>
-      <input
-        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
-        type="email"
-        id="email"
-        name="email"
-        value={user.email}
-        onChange={(e) => setUser({ ...user, email: e.target.value })}
-        placeholder="email"
-      />
+          {/* Email */}
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email
+            </label>
+            <input
+              id="email"
+              className={`w-full p-3 border rounded-lg focus:outline-none ${
+                errors.email
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-indigo-500"
+              }`}
+              placeholder="Enter your email"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email format",
+                },
+              })}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
+          </div>
 
-      <label htmlFor="password">password</label>
-      <input
-        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
-        type="text"
-        id="password"
-        name="password"
-        value={user.password}
-        onChange={(e) => setUser({ ...user, password: e.target.value })}
-        placeholder="password"
-      />
-      <button onClick={onSignup} className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600">{buttonDisabled ? "cant sign up now":"signup"}</button>
-      <Link href='/login'>Visit login page</Link>
+          {/* Password */}
+          {/* Password */}
+          <div className="mb-6">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              className={`w-full p-3 border rounded-lg focus:outline-none ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-indigo-500"
+              }`}
+              placeholder="Enter your password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              })}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
+          </div>
 
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className={`w-full py-3 rounded-lg text-white font-semibold ${
+              !isValid || loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-indigo-500 hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+            }`}
+            disabled={!isValid || loading}
+          >
+            {loading ? "Signing Up..." : "Sign Up"}
+          </button>
+        </form>
+
+        {/* DevTool for debugging */}
+        <DevTool control={control} />
+
+        <p className="text-sm text-gray-600 mt-4 text-center">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="text-indigo-500 font-medium hover:underline"
+          >
+            Log in here
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

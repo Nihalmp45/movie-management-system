@@ -1,83 +1,147 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios  from "axios";
-import toast, { Toaster } from 'react-hot-toast';
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 
 export default function LoginPage() {
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-   
-  });
-  const [loading,setLoading] = useState(false)
-  const [buttonDisabled,setButtonDisabled] = useState(true)
-  const router = useRouter()
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const onLogin = async () => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isValid },
+    reset,
+  } = useForm({
+    mode: "onBlur", // Trigger validation on blur
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onLogin = async (data: any) => {
     try {
-      setLoading(true)
-      const response = await axios.post("/api/users/login", user);
+      setLoading(true);
+      const response = await axios.post("/api/users/login", data);
       console.log(response.data);
-      toast.success('Successfully created! 🎉'); // Success toast
-      router.push("/profile")
-    
-      
+      toast.success("Successfully logged in! 🎉");
+      reset(); // Reset form fields
+      router.push("/profile");
     } catch (error) {
-      console.log(error)
-      toast.error('wrong password ❌'); // Error toast
-    }finally{
-      setLoading(false)
+      console.error(error);
+      toast.error("Wrong password or email ❌");
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (user.email.length >0 && user.password.length>0){
-      setButtonDisabled(false)
-    }else(
-    setButtonDisabled(true))
-  }, [user])
-
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1>{loading ? "Loading":"Login"}</h1>
-      <hr />
-      <Toaster position="top-center" reverseOrder={false} />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 to-indigo-600 py-6">
+      <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          {loading ? "Loading..." : "Log in to Your Account"}
+        </h1>
+        <Toaster position="top-center" reverseOrder={false} />
+        <form onSubmit={handleSubmit(onLogin)}>
+          {/* Email */}
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email
+            </label>
+            <input
+              id="email"
+              className={`w-full p-3 border rounded-lg focus:outline-none ${
+                errors.email
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-indigo-500"
+              }`}
+              placeholder="Enter your email"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email format",
+                },
+              })}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
+          </div>
 
-      <label htmlFor="email">email</label>
-      <input
-        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
-        type="email"
-        id="email"
-        name="email"
-        value={user.email}
-        onChange={(e) => setUser({ ...user, email: e.target.value })}
-        placeholder="email"
-      />
+          {/* Password */}
+          <div className="mb-4">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              className={`w-full p-3 border rounded-lg focus:outline-none ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-indigo-500"
+              }`}
+              placeholder="Enter your password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              })}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
+          </div>
 
-      <label htmlFor="password">password</label>
-      <input
-        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black"
-        type="text"
-        id="password"
-        name="password"
-        value={user.password}
-        onChange={(e) => setUser({ ...user, password: e.target.value })}
-        placeholder="password"
-      />
-       <div className="mt-1">
-        <label
-          className="text-blue-500 hover:underline"
-        >
-          Forgot Password?
-        </label>
+          {/* Forgot Password */}
+          {/* <div className="mb-4 text-right">
+            <Link
+              href="/changepasswordwithemail"
+              className="text-indigo-500 text-sm hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </div> */}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className={`w-full py-3 rounded-lg text-white font-semibold ${
+              !isValid || loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-indigo-500 hover:bg-indigo-600 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+            }`}
+            disabled={!isValid || loading}
+          >
+            {loading ? "Logging In..." : "Log In"}
+          </button>
+        </form>
+         <DevTool control={control} />
+        <p className="text-sm text-gray-600 mt-4 text-center">
+          Don't have an account?{" "}
+            <Link
+              href="/signup"
+              className="text-indigo-500 font-medium hover:underline"
+            >
+              Sign up here
+            </Link>
+        </p>
       </div>
-
-      <button onClick={onLogin} className="mt-2 p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600">{buttonDisabled ? "cant login now":"login now"}</button>
-      <Link href='/signup'>Visit signup page</Link>
-
     </div>
   );
 }
