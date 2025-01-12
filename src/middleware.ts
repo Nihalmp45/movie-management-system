@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   const cookie = request.cookies.get('token')?.value || '';
   const path = request.nextUrl.pathname;
 
-  const publicPaths = ['/login', '/signup','/verifyemail'];
+  const publicPaths = ['/login', '/signup','/verifyemail','/'];
   const protectedPaths = ['/profile']; // Include paths that require authentication
 
   // Public path logic: If logged in, redirect to the home page
