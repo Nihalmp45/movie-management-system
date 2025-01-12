@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     if (genre) filters.genre = genre;
     if (rating) filters.rating = parseInt(rating);
 
-    const sort:any = { [sortBy]: order };
+    const sort: { [key: string]: 1 | -1 } = { [sortBy]: order }
 
     const movies = await Movie.find(filters)
       .sort(sort)
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     const totalPages = Math.ceil(totalMovies / limit);
 
     return NextResponse.json({ movies, totalPages }, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch {
+    return NextResponse.json( { error: "An unexpected error occurred. Please try again later." }, { status: 500 });
   }
 }

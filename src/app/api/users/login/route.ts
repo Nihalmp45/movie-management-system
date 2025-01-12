@@ -3,7 +3,6 @@ import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { sendEmail } from "@/helpers/mailer";
 
 connect();
 
@@ -54,9 +53,9 @@ export async function POST(request: NextRequest) {
    
 
 
-  } catch (error: any) {
+  } catch {
     return NextResponse.json(
-      { error: error.message || "Something went wrong" },
+      { error: "Something went wrong" },
       { status: 500 }
     );
   }

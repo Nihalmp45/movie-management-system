@@ -33,9 +33,8 @@ export default function MovieForm() {
         genre: "Comedy",
         rating: "1",
       });
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.error || "Failed to submit the form. Please try again.";
+    } catch {
+      const errorMessage = "Failed to submit the form. Please try again.";
       toast.error(errorMessage);
     } finally {
       setLoading(false);

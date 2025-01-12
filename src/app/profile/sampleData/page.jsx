@@ -12,7 +12,7 @@ export default function SampleData() {
       try {
         const response = await axios.get("https://jsonplaceholder.typicode.com/comments");
         setComments(response.data.slice(0, 10)); // Fetch only the first 10 comments for brevity
-      } catch (err) {
+      } catch {
         setError("Failed to fetch comments. Please try again later.");
       } finally {
         setLoading(false);

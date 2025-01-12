@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       { message: "Movie added successfully", savedMovie },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in POST /api/movies:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred. Please try again later." },
