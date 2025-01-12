@@ -24,19 +24,22 @@ npm or yarn
 ### Clone the repository:
 
 
-git clone https://github.com/yourusername/movie-management-system.git
+#### git clone https://github.com/yourusername/movie-management-system.git
+
 Navigate to the project directory:
 
-cd movie-management-system
+#### cd movie-management-system
+
 Install dependencies:
 
+#### npm install
 
-npm install
 Set up environment variables:
 
 Create a .env.local file in the root of the project and add the following:
 
-NEXT_PUBLIC_MONGO_URI=your_mongodb_connection_string
+#### NEXT_PUBLIC_MONGO_URI=your_mongodb_connection_string
+
 Run the development server:
 
-npm run dev
+#### npm run dev
