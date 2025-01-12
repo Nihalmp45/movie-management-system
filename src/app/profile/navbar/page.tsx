@@ -47,7 +47,8 @@ export default function ProfilePage() {
           <div className="flex items-center space-x-6">
             {/* Links */}
             <Link href="/profile/moviesTable" className="hover:text-gray-300">Movies</Link>
-            <Link href="/analytics" className="hover:text-gray-300">Analytics</Link>
+            <Link href="/profile/analytics" className="hover:text-gray-300">Analytics</Link>
+            <Link href="/profile/sampleData" className="hover:text-gray-300">Sample API</Link>
 
             {/* Email displayed as a rounded circle */}
             <div className="w-10 h-10 bg-indigo-500 text-white flex items-center justify-center rounded-full">
