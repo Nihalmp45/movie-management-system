@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Movie Management System
+### A web-based movie management application built with Next.js, React, and MongoDB. This app allows users to add, manage, and display a collection of movies with details like title, genre, release year, and rating.
 
-## Getting Started
+## Features
+Add and manage movie details (Title, Genre, Release Year, Rating).
+Search and filter movies by title and genre.
+Responsive design for mobile and desktop views.
+User authentication and authorization .
+Movie analytics via chart with chart.js
 
-First, run the development server:
+## Tech Stack
+Frontend: React, Next.js, Tailwind CSS, Daisy UI
+Backend: MongoDB (for storing movie data)
+Hosting: Vercel
+Other libraries: Chart.js
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Setup
+Prerequisites
+Node.js >= 16.0.0
+npm or yarn
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1) Clone the repository:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+#### git clone https://github.com/yourusername/movie-management-system.git
 
-To learn more about Next.js, take a look at the following resources:
+Navigate to the project directory:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### 2) cd movie-management-system
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Install dependencies:
 
-## Deploy on Vercel
+#### 3) npm install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Set up environment variables:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Create a .env.local file in the root of the project and add the following:
+
+#### 4) NEXT_PUBLIC_MONGO_URI=your_mongodb_connection_string
+
+Run the development server:
+
+#### 5) npm run dev

@@ -27,7 +27,7 @@ export default function SignupPage() {
   });
 
   // Signup handler
-  const onSignup = async (data: any) => {
+  const onSignup = async (data: unknown) => {
     try {
       setLoading(true);
       const response = await axios.post("/api/users/signup", data);

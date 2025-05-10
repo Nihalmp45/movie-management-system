@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function MovieForm() {
   const [movieDetails, setMovieDetails] = useState({
@@ -12,8 +13,6 @@ export default function MovieForm() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -23,12 +22,10 @@ export default function MovieForm() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
 
     try {
       const response = await axios.post("/api/movies/addmovie", movieDetails);
-      setSuccess(response.data.message || "Movie submitted successfully!");
+      toast.success(response.data.message || "Movie submitted successfully! 🎉");
       setMovieDetails({
         name: "",
         actor: "",
@@ -36,10 +33,9 @@ export default function MovieForm() {
         genre: "Comedy",
         rating: "1",
       });
-    } catch (err: any) {
-      const errorMessage =
-        err.response?.data?.error || "Failed to submit the form. Please try again.";
-      setError(errorMessage);
+    } catch {
+      const errorMessage = "Failed to submit the form. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -47,11 +43,10 @@ export default function MovieForm() {
 
   return (
     <div className="w-full bg-white p-8">
+      <Toaster position="top-center" reverseOrder={false} />
       <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
         Add a Movie
       </h1>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      {success && <p className="text-green-500 mb-4">{success}</p>}
       <form onSubmit={handleSubmit} className="space-y-4 max-w-3xl mx-auto">
         {/* Movie Name */}
         <div>

@@ -12,10 +12,8 @@ export async function GET(request:NextRequest){
             data:user
         })
         
-    } catch (error:any) {
-        return NextResponse.json({
-            error:error.message
-        },{status:400}
+    } catch{
+        return NextResponse.json( { error: "An unexpected error occurred. Please try again later." },{status:400}
     )
     }
 }

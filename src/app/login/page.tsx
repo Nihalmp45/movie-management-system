@@ -25,7 +25,7 @@ export default function LoginPage() {
     },
   });
 
-  const onLogin = async (data: any) => {
+  const onLogin = async (data: unknown) => {
     try {
       setLoading(true);
       const response = await axios.post("/api/users/login", data);
@@ -133,7 +133,7 @@ export default function LoginPage() {
         </form>
          <DevTool control={control} />
         <p className="text-sm text-gray-600 mt-4 text-center">
-          Don't have an account?{" "}
+          Do not have an account?{" "}
             <Link
               href="/signup"
               className="text-indigo-500 font-medium hover:underline"
